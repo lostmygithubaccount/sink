@@ -1,5 +1,3 @@
-# dbt labs
-org: dbt-labs
-source-repo: dbt-core
-
 # lostmygithubaccount
+org: lostmygithubaccount
+source-repo: repoA

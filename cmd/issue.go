@@ -18,7 +18,7 @@ import (
 // issueCmd represents the issue command
 var issueCmd = &cobra.Command{
 	Use:   "issue [issue number]",
-	Short: "Sync an issue from a source repository to many target repositories in the same organization.",
+	Short: "Sync an issue from a source repository to many target repositories in the same organization",
 	// TODO: add long description with examples
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command.`,
@@ -58,18 +58,28 @@ and usage of using your command.`,
 			defer log.Println("dry run completed, rerun with --dry-run=false to copy issues")
 		}
 
-		// get the user TODO: unused, remove?
-		user := utils.GetUser(client)
-
-		// get the target repos
+		// get the options for target repos
 		team := viper.GetString("team")
 		targetRepos := viper.GetStringSlice("target-repos")
 		excludeTeamRepos := viper.GetStringSlice("exclude-team-repos")
 		extraRepos := viper.GetStringSlice("extra-repos")
-		targetRepos = utils.GetTargetRepos(org, team, targetRepos, excludeTeamRepos, extraRepos, client)
+
+		// convert the strings to repos
+		sourceRepo := utils.Repo{Name: source}
+
+		// convert the repos to repos
+		targetReposRepos := utils.ReposToRepos(targetRepos)
+		excludeTeamReposRepos := utils.ReposToRepos(excludeTeamRepos)
+		extraReposRepos := utils.ReposToRepos(extraRepos)
+
+		// get the user TODO: unused, remove?
+		user := utils.GetUser(client)
+
+		// compute the target repo
+		targetReposReposRepos := utils.GetTargetRepos(org, team, targetReposRepos, excludeTeamReposRepos, extraReposRepos, client)
 
 		// get the source issue
-		sourceIssue := utils.GetIssue(org, source, issueNumber, client)
+		sourceIssue := utils.GetIssue(org, sourceRepo, issueNumber, client)
 
 		// debugging TODO: debug flag? remove?
 		log.Println("----------------------------------------------------------------")
@@ -77,13 +87,13 @@ and usage of using your command.`,
 		log.Println("org:", org)
 		log.Println("source-repo:", source)
 		log.Println("sourceIssue:", sourceIssue)
-		log.Println("targetRepos:", targetRepos)
-		log.Println("excludeTeamRepos:", excludeTeamRepos)
-		log.Println("extraRepos:", extraRepos)
+		log.Println("targetRepos:", targetReposReposRepos)
+		log.Println("excludeTeamRepos:", excludeTeamReposRepos)
+		log.Println("extraRepos:", extraReposRepos)
 		log.Println("----------------------------------------------------------------")
 
 		// for each target repo
-		for _, target := range targetRepos {
+		for _, target := range targetReposReposRepos {
 			log.Println("\ttarget:", target)
 			if !dryRun {
 				log.Println("\tcopying issue...")

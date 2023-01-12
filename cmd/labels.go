@@ -17,7 +17,7 @@ import (
 // labelsCmd represents the labels command
 var labelsCmd = &cobra.Command{
 	Use:   "labels",
-	Short: "Sync labels from a source repository to many target repositories in the same organization.",
+	Short: "Sync labels from a source repository to many target repositories in the same organization",
 	// TODO: add long description with examples
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command.`,
@@ -51,36 +51,46 @@ and usage of using your command.`,
 			defer log.Println("dry run completed, rerun with --dry-run=false to sync")
 		}
 
-		// get the user TODO: unused, remove?
-		user := utils.GetUser(client)
-
-		// get the target repos
+		// get the options for target repos
 		team := viper.GetString("team")
 		targetRepos := viper.GetStringSlice("target-repos")
 		excludeTeamRepos := viper.GetStringSlice("exclude-team-repos")
 		extraRepos := viper.GetStringSlice("extra-repos")
-		targetRepos = utils.GetTargetRepos(org, team, targetRepos, excludeTeamRepos, extraRepos, client)
+
+		// convert strings to repos
+		sourceRepo := utils.Repo{Name: source}
+
+		// convert repos strings to Repo structs
+		targetReposRepos := utils.ReposToRepos(targetRepos)
+		excludeTeamReposRepos := utils.ReposToRepos(excludeTeamRepos)
+		extraReposRepos := utils.ReposToRepos(extraRepos)
+
+		// get the user TODO: unused, remove?
+		user := utils.GetUser(client)
+
+		// compute the target repos
+		targetReposReposRepos := utils.GetTargetRepos(org, team, targetReposRepos, excludeTeamReposRepos, extraReposRepos, client)
 
 		// debugging TODO: debug flag? remove?
 		log.Println("----------------------------------------------------------------")
 		log.Println("user:", user)
 		log.Println("org:", org)
-		log.Println("source-repo:", source)
-		log.Println("targetRepos:", targetRepos)
-		log.Println("excludeTeamRepos:", excludeTeamRepos)
-		log.Println("extraRepos:", extraRepos)
+		log.Println("sourceRepo:", sourceRepo)
+		log.Println("targetReposRepos:", targetReposReposRepos)
+		log.Println("excludeTeamReposRepos:", excludeTeamReposRepos)
+		log.Println("extraReposRepos:", extraReposRepos)
 		log.Println("----------------------------------------------------------------")
 
-		sourceLabels := utils.GetRepoLabels(org, source, client)
+		sourceLabels := utils.GetRepoLabels(org, sourceRepo, client)
 		log.Println("sourceLabels:", sourceLabels)
 
 		// for each target repo
-		for _, target := range targetRepos {
+		for _, target := range targetReposReposRepos {
 			log.Println("\ttarget:", target)
 			targetLabels := utils.GetRepoLabels(org, target, client)
 			log.Println("\ttargetLabels:", targetLabels)
 			log.Println("\tsyncing labels...")
-			utils.SyncLabels(dryRun, org, source, target, sourceLabels, targetLabels, client)
+			utils.SyncLabels(dryRun, org, sourceRepo, target, sourceLabels, targetLabels, client)
 		}
 	},
 }

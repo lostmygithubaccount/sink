@@ -35,8 +35,14 @@ type Label struct {
 	NewName     string `json:"new_name"`
 }
 
+type Repo struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Private     bool   `json:"private"`
+}
+
 type Labels map[string]Label // map of labels by name
-type Repos []string          // string slice of repos
+type Repos []Repo            // slice of repos
 
 func (user User) String() string {
 	return user.URL
@@ -54,6 +60,19 @@ func (labels Labels) String() string {
 	out := "\n"
 	for _, label := range labels {
 		out += fmt.Sprintf("\t%s\n", label)
+	}
+
+	return out
+}
+
+func (repo Repo) String() string {
+	return repo.Name
+}
+
+func (repos Repos) String() string {
+	out := "\n"
+	for _, repo := range repos {
+		out += fmt.Sprintf("\t%s\n", repo)
 	}
 
 	return out
@@ -107,7 +126,7 @@ func GetTargetRepos(org, team string, targetRepos, excludeTeamRepos, extraRepos 
 	return
 }
 
-func GetIssue(org, repo string, issueNumber int, c api.RESTClient) (issue Issue) {
+func GetIssue(org string, repo Repo, issueNumber int, c api.RESTClient) (issue Issue) {
 
 	// construct REST endpoint
 	endpoint := fmt.Sprintf("repos/%s/%s/issues/%d", org, repo, issueNumber)
@@ -121,7 +140,7 @@ func GetIssue(org, repo string, issueNumber int, c api.RESTClient) (issue Issue)
 	return
 }
 
-func GetRepoLabels(org, repo string, c api.RESTClient) (labels Labels) {
+func GetRepoLabels(org string, repo Repo, c api.RESTClient) (labels Labels) {
 
 	// TODO: remove hardcoded limit, add paging
 	// construct REST endpoint
@@ -146,7 +165,7 @@ func GetRepoLabels(org, repo string, c api.RESTClient) (labels Labels) {
 	return
 }
 
-func CopyIssue(org, target string, sourceIssue Issue, c api.RESTClient) (response Issue) {
+func CopyIssue(org string, target Repo, sourceIssue Issue, c api.RESTClient) (response Issue) {
 
 	// construct REST endpoint
 	endpoint := fmt.Sprintf("repos/%s/%s/issues", org, target)
@@ -175,7 +194,7 @@ func CopyIssue(org, target string, sourceIssue Issue, c api.RESTClient) (respons
 	return
 }
 
-func SyncLabels(dryRun bool, org, source, target string, sourceLabels, targetLabels Labels, c api.RESTClient) {
+func SyncLabels(dryRun bool, org string, source, target Repo, sourceLabels, targetLabels Labels, c api.RESTClient) {
 
 	// for each label in the source repo
 	for _, sourceLabel := range sourceLabels {
@@ -204,8 +223,15 @@ func SyncLabels(dryRun bool, org, source, target string, sourceLabels, targetLab
 	}
 }
 
+func ReposToRepos(repos []string) (r Repos) {
+	for _, repo := range repos {
+		r = append(r, Repo{Name: repo})
+	}
+	return
+}
+
 // private helpers
-func getTeamRepos(org, team string, c api.RESTClient) (repos []string) {
+func getTeamRepos(org, team string, c api.RESTClient) (repos Repos) {
 
 	// construct REST endpoint
 	endpoint := fmt.Sprintf("orgs/%s/teams/%s/repos", org, team)
@@ -215,11 +241,6 @@ func getTeamRepos(org, team string, c api.RESTClient) (repos []string) {
 	err := c.Get(endpoint, &response)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	// extract the repo names
-	for _, repo := range *response {
-		repos = append(repos, repo.Name)
 	}
 
 	return
@@ -234,7 +255,7 @@ func labelsMatch(source, target Label) bool {
 	return false
 }
 
-func createLabel(org, repo string, sourceLabel Label, c api.RESTClient) {
+func createLabel(org string, repo Repo, sourceLabel Label, c api.RESTClient) {
 
 	// construct REST endpoint
 	endpoint := fmt.Sprintf("repos/%s/%s/labels", org, repo)
@@ -260,7 +281,7 @@ func createLabel(org, repo string, sourceLabel Label, c api.RESTClient) {
 	}
 }
 
-func updateLabel(org, repo string, sourceLabel Label, c api.RESTClient) {
+func updateLabel(org string, repo Repo, sourceLabel Label, c api.RESTClient) {
 
 	// construct REST endpoint
 	endpoint := fmt.Sprintf("repos/%s/%s/labels/%s", org, repo, sourceLabel.Name)
