@@ -39,7 +39,11 @@ Example usage:
 
 It's recommended to use a config file instead of setting flags.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+		// cmd.Help()
+		// check for error
+		if err := cmd.Help(); err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
