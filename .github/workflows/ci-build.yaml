@@ -13,17 +13,13 @@ on:
       - '**.go'
 
 permissions:
-  checks: read
   contents: read
-  issues: write
-  pull-requests: write
-  repository-projects: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.SINK_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
