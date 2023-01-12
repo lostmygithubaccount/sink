@@ -24,7 +24,3 @@ func TestIssue(t *testing.T) {
 	t.Log("Source: ", source)
 	t.Log("Targets: ", targets)
 }
-
-func TestMockFail(t *testing.T) {
-	t.Error("a test error in the call")
-}
