@@ -14,8 +14,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.SINK_TOKEN }}
       RELEASE: ${{ github.event.inputs.release }}
     steps:
       - uses: actions/checkout@v3
@@ -28,6 +26,8 @@ jobs:
         run: go mod download
       - name: test
         run: task test
+        env:
+          GITHUB_TOKEN: ${{ secrets.SINK_TOKEN }}
       - name: build
         run: task build
       - name: create-release
