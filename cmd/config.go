@@ -4,6 +4,8 @@ package cmd
 
 // imports
 import (
+	"log"
+
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +16,9 @@ var configCmd = &cobra.Command{
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Usage()
+		if err := cmd.Usage(); err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 

@@ -1,0 +1,35 @@
+name: ci-build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - v*
+    branches:
+      - main
+  pull_request:
+    paths:
+      - '.github/workflows/ci-build.yaml'
+      - '**.go'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.SINK_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ vars.GO_VERSION }}
+      - name: install taskfile.dev
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+      - name: test
+        run: task test
+      - name: build
+        run: task build
+

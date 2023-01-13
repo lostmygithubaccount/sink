@@ -82,7 +82,7 @@ func (repos Repos) String() string {
 func GetUser(c api.RESTClient) (user User) {
 
 	// construct REST endpoint
-	endpoint := fmt.Sprintf("user")
+	endpoint := "user"
 
 	// make the request
 	err := c.Get(endpoint, &user)

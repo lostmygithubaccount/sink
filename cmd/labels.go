@@ -23,7 +23,9 @@ var labelsCmd = &cobra.Command{
 and usage of using your command.`,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		// bind flags to viper
-		viper.BindPFlags(cmd.Flags())
+		if err := viper.BindPFlags(cmd.Flags()); err != nil {
+			log.Fatal(err)
+		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
