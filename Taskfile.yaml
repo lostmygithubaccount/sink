@@ -2,9 +2,27 @@
 version: '3'
 
 tasks:
-  build:
-    cmds:
-      - go build -v -o "${HOME}/.local/bin" .
+
   test:
     cmds:
       - go test -v -race ./...
+
+  build:
+    cmds:
+      - go build -v -o "${HOME}/.local/bin" .
+
+  release-create:
+    cmds:
+      - task: test
+      - task: build
+      - gh release create ${RELEASE} --generate-notes {{.CLI_ARGS}}
+  
+  release-upload:
+    cmds:
+      - task: test
+      - task: build
+      - gh release upload ${RELEASE} "${HOME}/.local/bin/sink" --clobber
+
+  print-date:
+    cmds:
+      - echo "v{{ now | date "2006.02.01" }}"
