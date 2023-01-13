@@ -25,7 +25,9 @@ jobs:
           go-version: ${{ vars.GO_VERSION }}
       - uses: actions/cache@v3
         with:
-          path: ~/go/pkg/mod
+          path: |
+            ~/go/pkg/mod
+            /usr/local/go
           key: go-${{ runner.os }}-${{ hashFiles('go.mod') }}
           restore-keys: |
             go-${{ runner.os }}
