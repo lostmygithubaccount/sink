@@ -35,6 +35,6 @@ jobs:
           task build
           echo "$(which sink)"
           sink --help
-          task release-create -- -d -p
+          task release-create -- -d
           task release-upload
 
