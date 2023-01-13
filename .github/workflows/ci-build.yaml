@@ -3,8 +3,6 @@ name: ci-build
 on:
   workflow_dispatch:
   push:
-    tags:
-      - v*
     branches:
       - main
   pull_request:
@@ -25,9 +23,16 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ vars.GO_VERSION }}
+      - uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: go-${{ runner.os }}-${{ hashFiles('go.mod') }}
+          restore-keys: |
+            go-${{ runner.os }}
       - name: install taskfile.dev
-        run: |
-          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+        run: go install github.com/go-task/task/v3/cmd/task@latest
+      - name: download dependencies
+        run: go mod download
       - name: test
         run: task test
       - name: build
