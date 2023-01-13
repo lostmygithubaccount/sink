@@ -9,7 +9,7 @@ tasks:
 
   build:
     cmds:
-      - go build -v -o "${HOME}/.local/bin" .
+      - go build -v -o "${HOME}/go/bin" .
 
   release-create:
     cmds:
@@ -17,7 +17,7 @@ tasks:
   
   release-upload:
     cmds:
-      - gh release upload ${RELEASE} "${HOME}/.local/bin/sink" --clobber
+      - gh release upload ${RELEASE} "${HOME}/go/bin/sink" --clobber
 
   print-date:
     cmds:
