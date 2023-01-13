@@ -30,7 +30,7 @@ jobs:
           restore-keys: |
             go-${{ runner.os }}
       - name: install taskfile.dev
-        run: go install github.com/go-task/task/v3/cmd/task@latest
+        run: go install -v github.com/go-task/task/v3/cmd/task@latest
       - name: download dependencies
         run: go mod download
       - name: test
