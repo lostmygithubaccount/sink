@@ -30,7 +30,6 @@ jobs:
         run: task test
         env:
           GH_TOKEN: ${{ secrets.SINK_TOKEN }}
-      - name: create-release
       - name: release
         run: |
           task build
