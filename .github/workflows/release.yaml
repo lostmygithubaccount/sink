@@ -34,5 +34,9 @@ jobs:
         run: task build
       - name: create-release
         run: task release-create -- -d -p
+      - name: test
+        run: |
+          echo "$(which sink)"
+          sink --help
       - name: upload-sink
         run: task release-upload
