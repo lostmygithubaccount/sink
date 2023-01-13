@@ -7,6 +7,12 @@ tasks:
     cmds:
       - go test -v -race ./...
 
+  integration-test:
+    cmds:
+      - task: build
+      - which sink
+      - sink --help
+
   build:
     cmds:
       - go build -v -o "${HOME}/go/bin" .
