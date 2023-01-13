@@ -2,7 +2,6 @@
 
 [![ci-build](https://github.com/lostmygithubaccount/sink/workflows/ci-build/badge.svg)](https://github.com/lostmygithubaccount/sink/actions/workflows/ci-build.yaml)
 [![ci-lint](https://github.com/lostmygithubaccount/sink/workflows/ci-lint/badge.svg)](https://github.com/lostmygithubaccount/sink/actions/workflows/ci-lint.yaml)
-]
 [![release](https://github.com/lostmygithubaccount/sink/workflows/release/badge.svg)](https://github.com/lostmygithubaccount/sink/actions/workflows/release.yaml)
 
 Welcome to the sink repository! This is not intended to be public and is primarily a learning project (learning Go + CLI + GitHub APIs).
