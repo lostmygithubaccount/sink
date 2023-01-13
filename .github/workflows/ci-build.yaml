@@ -7,6 +7,7 @@ on:
       - main
   pull_request:
     paths:
+      - 'Taskfile.dev'
       - '.github/workflows/ci-build.yaml'
       - '**.go'
 
