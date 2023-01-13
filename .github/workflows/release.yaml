@@ -35,7 +35,7 @@ jobs:
       - name: integration test
         run: task integration-test
       - name: create release
-        run: task release-create
+        run: task release-create -- -d -p
       - name: upload release
         run: task release-upload
 
