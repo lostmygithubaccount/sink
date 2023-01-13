@@ -26,7 +26,7 @@ jobs:
       - uses: actions/cache@v3
         with:
           path: |
-            ~/go/pkg/mod
+            ~/go
             /usr/local/go
           key: go-${{ runner.os }}-${{ hashFiles('go.mod') }}
           restore-keys: |
