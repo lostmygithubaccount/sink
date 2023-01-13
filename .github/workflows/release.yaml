@@ -30,11 +30,12 @@ jobs:
         run: task test
         env:
           GH_TOKEN: ${{ secrets.SINK_TOKEN }}
-      - name: release
-        run: |
-          task build
-          echo "$(which sink)"
-          sink --help
-          task release-create -- -d
-          task release-upload
+      - name: build
+        run: task build
+      - name: integration test
+        run: task integration-test
+      - name: create release
+        run: task release-create
+      - name: upload release
+        run: task release-upload
 
