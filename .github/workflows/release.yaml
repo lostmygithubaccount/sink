@@ -13,6 +13,38 @@ permissions:
   discussions: write
 
 jobs:
+
+  create-release:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_FLAGS: ${{ github.event.inputs.release_flags }}
+      OS: ${{ matrix.os }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ vars.GO_VERSION }}
+		uses: actions/cache@v3
+        with:
+          path: |
+            ~/go
+            /usr/local/go
+          key: go-${{ runner.os }}-${{ hashFiles('go.mod') }}
+          restore-keys: |
+            go-${{ runner.os }}
+      - name: install taskfile.dev
+        run: |
+          if ! command -v task &> /dev/null
+          then
+            go install -v github.com/go-task/task/v3/cmd/task@latest
+          fi
+	  - name: delete release if exists
+		run: task release-delete
+        continue-on-error: true
+      - name: create release
+        run: task release-create -- $RELEASE_FLAGS
+
   release:
     strategy:
       matrix:
@@ -45,8 +77,6 @@ jobs:
         run: task release-build
       - name: integration test
         run: task release-integration-test
-      - name: create release
-        run: task release-create -- $RELEASE_FLAGS
       - name: upload release
         run: task release-upload
 
