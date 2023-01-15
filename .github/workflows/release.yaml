@@ -3,13 +3,14 @@ name: release
 on:
   workflow_dispatch:
     inputs:
-      release:
-        description: release version
-        required: true
       release_flags:
         description: release flags
         required: false
         default: "-d -p"
+      release:
+        description: release version
+        required: false
+        default: ""
 
 permissions:
   contents: write 
