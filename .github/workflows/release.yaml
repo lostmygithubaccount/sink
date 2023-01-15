@@ -26,8 +26,8 @@ jobs:
     env:
       RELEASE: ${{ github.event.inputs.release }}
       RELEASE_FLAGS: ${{ github.event.inputs.release_flags }}
+      OS: ${{ matrix.os }}
       GH_TOKEN: ${{ github.token }}
-      OS: ${{ runner.os }}_${{ runner.arch }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
