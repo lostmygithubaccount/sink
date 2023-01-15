@@ -12,7 +12,6 @@ on:
       - 'Taskfile.dev'
 
 permissions:
-  checks: read
   content: read
 
 jobs:
