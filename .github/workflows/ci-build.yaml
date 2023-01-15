@@ -12,6 +12,7 @@ on:
       - 'Taskfile.dev'
 
 permissions:
+  checks: write
   contents: write
   issues: write
   repository-projects: write
