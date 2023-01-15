@@ -38,7 +38,11 @@ jobs:
       - name: which task
         run: which task
       - name: install taskfile.dev
-        run: go install -v github.com/go-task/task/v3/cmd/task@latest
+        run: |
+          if ! command -v task &> /dev/null
+          then
+            go install -v github.com/go-task/task/v3/cmd/task@latest
+          fi
       - name: download dependencies
         run: go mod download
       - name: test
