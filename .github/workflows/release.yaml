@@ -7,10 +7,6 @@ on:
         description: release flags
         required: false
         default: "-d -p"
-      release:
-        description: release version
-        required: false
-        default: ""
 
 permissions:
   contents: write 
@@ -25,9 +21,8 @@ jobs:
           - macos-latest
     runs-on: ${{ matrix.os }}
     env:
-      RELEASE: ${{ github.event.inputs.release }}
       RELEASE_FLAGS: ${{ github.event.inputs.release_flags }}
-      OS: ${{ matrix.os }}
+      OS: ${{ matrix.os }}_${{ runner.arch}}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v3
