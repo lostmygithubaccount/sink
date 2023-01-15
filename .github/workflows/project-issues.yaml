@@ -1,0 +1,26 @@
+name: project-issues
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+      - transferred
+      - labeled
+
+permissions:
+  issues: write
+  contents: write
+  repository-projects: write
+
+jobs:
+  add-to-project:
+    name: add-issue-to-project
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/add-to-project@v0.3.0
+        with:
+          project-url: https://github.com/users/lostmygithubaccount/projects/5
+          github-token: ${{ secrets.SINK_TOKEN }}

@@ -17,28 +17,38 @@ permissions:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: 
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
     env:
       RELEASE: ${{ github.event.inputs.release }}
       RELEASE_FLAGS: ${{ github.event.inputs.release_flags }}
       GH_TOKEN: ${{ github.token }}
+      OS: ${{ runner.os }}_${{ runner.arch }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ vars.GO_VERSION }}
       - name: install taskfile.dev
-        run: go install -v github.com/go-task/task/v3/cmd/task@latest
+        run: |
+          if ! command -v task &> /dev/null
+          then
+            go install -v github.com/go-task/task/v3/cmd/task@latest
+          fi
       - name: download dependencies
         run: go mod download
       - name: test
         run: task test
         env:
           GH_TOKEN: ${{ secrets.SINK_TOKEN }}
-      - name: build
-        run: task build
+      - name: release-build
+        run: task release-build
       - name: integration test
-        run: task integration-test
+        run: task release-integration-test
       - name: create release
         run: task release-create -- $RELEASE_FLAGS
       - name: upload release

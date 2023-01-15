@@ -7,16 +7,21 @@ on:
       - main
   pull_request:
     paths:
-      - 'Taskfile.dev'
       - '.github/workflows/ci-build.yaml'
       - '**.go'
+      - 'Taskfile.dev'
 
 permissions:
   contents: read
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: 
+          - ubuntu-latest
+          #- macos-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
@@ -30,14 +35,20 @@ jobs:
           key: go-${{ runner.os }}-${{ hashFiles('go.mod') }}
           restore-keys: |
             go-${{ runner.os }}
+      - name: which task
+        run: which task
       - name: install taskfile.dev
-        run: go install -v github.com/go-task/task/v3/cmd/task@latest
+        run: |
+          if ! command -v task &> /dev/null
+          then
+            go install -v github.com/go-task/task/v3/cmd/task@latest
+          fi
       - name: download dependencies
         run: go mod download
       - name: test
         run: task test
         env:
-          GITHUB_TOKEN: ${{ secrets.SINK_TOKEN }}
+          GH_TOKEN: ${{ secrets.SINK_TOKEN }}
       - name: build
         run: task build
 
