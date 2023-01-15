@@ -17,11 +17,15 @@ permissions:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     env:
       RELEASE: ${{ github.event.inputs.release }}
       RELEASE_FLAGS: ${{ github.event.inputs.release_flags }}
       GH_TOKEN: ${{ github.token }}
+      OS: ${{ runner.os }}_${{ runner.arch }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
@@ -35,10 +39,10 @@ jobs:
         run: task test
         env:
           GH_TOKEN: ${{ secrets.SINK_TOKEN }}
-      - name: build
-        run: task build
+      - name: release-build
+        run: task release-build
       - name: integration test
-        run: task integration-test
+        run: task release-integration-test
       - name: create release
         run: task release-create -- $RELEASE_FLAGS
       - name: upload release

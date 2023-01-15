@@ -7,16 +7,19 @@ on:
       - main
   pull_request:
     paths:
-      - 'Taskfile.dev'
       - '.github/workflows/ci-build.yaml'
       - '**.go'
+      - 'Taskfile.dev'
 
 permissions:
   contents: read
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3

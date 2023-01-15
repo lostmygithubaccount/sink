@@ -1,0 +1,64 @@
+# https://taskfile.dev
+version: '3'
+
+# version control variables
+dotenv: ['.env']
+
+tasks:
+
+  # helper tasks
+  build:
+    cmds:
+      - go build -v -o ${HOME}/go/bin .
+
+  test:
+    cmds:
+      - go test -v -race ./...
+
+  integration-test:
+    cmds:
+      - which sink
+      - sink --help
+
+  # you probably shouldn't run these manually
+  release-create:
+    cmds:
+      - gh release create v${RELEASE} --generate-notes {{.CLI_ARGS}}
+
+  release-delete:
+    cmds:
+      - gh release delete v${RELEASE} --cleanup-tag -y
+
+  release-build:
+    cmds:
+      - go build -v -o sink_v${RELEASE}_${OS} .
+ 
+  release-upload:
+    cmds:
+      - gh release upload v${RELEASE} sink_v${RELEASE}_${OS} {{.CLI_ARGS}}
+
+  release-download:
+    cmds:
+      - gh release download v${RELEASE} -p *${RELEASE}_${OS} {{.CLI_ARGS}}
+
+  release-local-setup:
+    cmds:
+      - cp sink_v${RELEASE}_${OS} ${HOME}/go/bin/sink
+      - chmod +x ${HOME}/go/bin/sink
+
+  release-integration-test:
+    cmds:
+      - task: release-local-setup
+      - task: integration-test
+
+  clean:
+    cmds:
+      - cmd: rm -f sink_v${RELEASE}_${OS}
+        ignore_error: true
+      - cmd: rm -f ${HOME}/go/bin/sink
+        ignore_error: true
+
+  # future endeavors
+  print-date:
+    cmds:
+      - echo {{ now | date "2006.02.01" }}
