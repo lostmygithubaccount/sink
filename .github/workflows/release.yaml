@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       RELEASE_FLAGS: ${{ github.event.inputs.release_flags }}
-      OS: ${{ matrix.os }}_${{ runner.arch}}
+      OS: ${{ matrix.os }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v3
