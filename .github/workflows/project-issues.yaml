@@ -18,9 +18,9 @@ jobs:
     name: add-issue-to-project
     runs-on: ubuntu-latest
     env:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/add-to-project@v0.3.0
         with:
           project-url: https://github.com/users/lostmygithubaccount/projects/5
-          github-token: ${{ secrets.TODO_PROJECT_PAT }}
+          github-token: ${{ secrets.SINK_TOKEN }}

@@ -11,7 +11,9 @@ on:
       - '**.go'
       - 'Taskfile.dev'
 
-permissions: write-all
+permissions:
+  checks: read
+  content: read
 
 jobs:
   build:
@@ -34,6 +36,8 @@ jobs:
           key: go-${{ runner.os }}-${{ hashFiles('go.mod') }}
           restore-keys: |
             go-${{ runner.os }}
+      - name: which task
+        run: which task
       - name: install taskfile.dev
         run: go install -v github.com/go-task/task/v3/cmd/task@latest
       - name: download dependencies
@@ -41,7 +45,7 @@ jobs:
       - name: test
         run: task test
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SINK_TOKEN }}
       - name: build
         run: task build
 
