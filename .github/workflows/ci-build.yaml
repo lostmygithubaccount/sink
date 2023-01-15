@@ -41,7 +41,7 @@ jobs:
       - name: test
         run: task test
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: build
         run: task build
 
