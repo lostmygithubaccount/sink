@@ -12,13 +12,18 @@ on:
       - 'Taskfile.dev'
 
 permissions:
-  contents: read
+  contents: write
+  issues: write
+  repository-projects: write
+  disussions: write
 
 jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: 
+          - ubuntu-latest
+          #- macos-latest
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -39,8 +44,6 @@ jobs:
         run: go mod download
       - name: test
         run: task test
-        env:
-          GITHUB_TOKEN: ${{ secrets.SINK_TOKEN }}
       - name: build
         run: task build
 

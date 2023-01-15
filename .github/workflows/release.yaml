@@ -19,7 +19,9 @@ jobs:
   release:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: 
+          - ubuntu-latest
+          - macos-latest
     runs-on: ${{ matrix.os }}
     env:
       RELEASE: ${{ github.event.inputs.release }}

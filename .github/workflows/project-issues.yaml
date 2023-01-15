@@ -11,6 +11,7 @@ on:
 permissions:
   issues: write
   content: write
+  repository-projects: write
 
 jobs:
   add-to-project:
