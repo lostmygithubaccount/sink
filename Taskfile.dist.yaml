@@ -20,6 +20,22 @@ tasks:
       - which sink
       - sink --help
 
+  release-download:
+    cmds:
+      - gh release download v${RELEASE} -p *${RELEASE}_${OS} {{.CLI_ARGS}}
+
+  release-local-setup:
+    cmds:
+      - cp sink_v${RELEASE}_${OS} ${HOME}/go/bin/sink
+      - chmod +x ${HOME}/go/bin/sink
+
+  clean:
+    cmds:
+      - cmd: rm -f sink_v${RELEASE}_${OS}
+        ignore_error: true
+      - cmd: rm -f ${HOME}/go/bin/sink
+        ignore_error: true
+ 
   # you probably shouldn't run these manually
   release-create:
     cmds:
@@ -37,28 +53,13 @@ tasks:
     cmds:
       - gh release upload v${RELEASE} sink_v${RELEASE}_${OS} {{.CLI_ARGS}}
 
-  release-download:
-    cmds:
-      - gh release download v${RELEASE} -p *${RELEASE}_${OS} {{.CLI_ARGS}}
-
-  release-local-setup:
-    cmds:
-      - cp sink_v${RELEASE}_${OS} ${HOME}/go/bin/sink
-      - chmod +x ${HOME}/go/bin/sink
-
   release-integration-test:
     cmds:
+      - task: release-download
       - task: release-local-setup
       - task: integration-test
 
-  clean:
-    cmds:
-      - cmd: rm -f sink_v${RELEASE}_${OS}
-        ignore_error: true
-      - cmd: rm -f ${HOME}/go/bin/sink
-        ignore_error: true
-
-  # future endeavors
+ # future endeavors
   print-date:
     cmds:
       - echo {{ now | date "2006.02.01" }}

@@ -35,7 +35,7 @@ sink issue --help
 1. Install Go
 2. [Optional] Install https://taskfile.dev
 
-You can install from source wiht something like:
+You can install from source with something like:
 
 ```bash
 gh repo clone lostmygithubaccount/sink
