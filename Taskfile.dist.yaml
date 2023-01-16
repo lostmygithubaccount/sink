@@ -22,7 +22,7 @@ tasks:
 
   release-download:
     cmds:
-      - gh release download v${RELEASE} -p *${RELEASE}_${OS} {{.CLI_ARGS}}
+      - gh release download v${RELEASE} -p *${RELEASE}_${OS} --clobber {{.CLI_ARGS}}
 
   release-local-setup:
     cmds:
