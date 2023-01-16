@@ -75,8 +75,8 @@ jobs:
           GH_TOKEN: ${{ secrets.SINK_TOKEN }}
       - name: release-build
         run: task release-build
-      - name: integration test
-        run: task release-integration-test
       - name: upload release
         run: task release-upload
+      - name: integration test
+        run: task release-integration-test
 
